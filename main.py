@@ -36,7 +36,7 @@ channel_0 = data[:,0]
 channel_1 = data[:,1]
 
 
-FFT_SIZE = 1024*2
+FFT_SIZE = 1024
 itterations = 1024
 map_color = cv2.COLORMAP_HOT
 
