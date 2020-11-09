@@ -36,8 +36,22 @@ channel_0 = data[:,0]
 channel_1 = data[:,1]
 
 
-FFT_SIZE = 1024
+FFT_SIZE = 1024*2
+itterations = 1024
+map_color = cv2.COLORMAP_HOT
 
-test = fftMag(FFT_SIZE, channel_0[0:1024])
+output = np.zeros((itterations,FFT_SIZE//2))
+for x in range(itterations):
+    mags = fftMag(FFT_SIZE, channel_0[x*FFT_SIZE:(x+1)*FFT_SIZE])
+    output[x] = mags
+
+    
+
+output = output / np.max(output)
+output = np.uint8(output * 255)
+img = cv2.applyColorMap(output,map_color)
+
+cv2.imshow('window', img)
+cv2.waitKey(-1)
 
 print("")
