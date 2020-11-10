@@ -83,6 +83,46 @@ VALUES =[
     '9',
     '0']
 
+INTS = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '0']
+
+
+CHARS =[
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z']
 
 def plot_fft(N_, data): 
     # Number of samplepoints
@@ -163,8 +203,17 @@ def process_channel(data_channel, itterations):
                 if negativeCount > MAX_SPACES_BETWEEN_CHARECTERS:
                     if len(current_signs) in [4,5,6]:
                         # filter out call signs that are just shorts, this is generally due to noise
-                        filterSet = [K for K in current_signs if K not in ['H','E','I','S','5','T']]
-                        if not len(filterSet) == 0:
+                        valid = True
+                        # Check valid formatting
+                        if not current_signs[1] in INTS and not current_signs[2] in INTS:
+                            valid = False
+                        if current_signs[1] in INTS and current_signs[2] in INTS:
+                            valid = False
+                        if current_signs[0] in INTS:
+                            valid = False 
+                        if current_signs[-1] in INTS:
+                            valid = False
+                        if valid:
                             outputName = ""
                             for sign in current_signs:
                                 outputName = outputName + sign
@@ -229,6 +278,8 @@ print(allDetectedCallSigns)
 f = open("outputCallSigns.txt", "a")
 
 for stuff in allDetectedCallSigns:
-    f.write(str(stuff[0]) + str(stuff[1]))
+    f.write(str(stuff[0]) + "  " +  str(stuff[1]) + '\n')
+
+
 
 f.close
