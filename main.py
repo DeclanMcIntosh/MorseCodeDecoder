@@ -5,6 +5,84 @@ import matplotlib.pyplot as plt
 import cv2
 import numpy as np
 
+# 1 is long 0 is short
+CODES = [
+    [0,1]       ,
+    [1,0,0,0]   ,
+    [1,0,1,0]   ,
+    [1,0,0]     ,
+    [0]         ,
+    [0,0,1,0]   ,
+    [1,1,0]     ,
+    [0,0,0,0]   ,
+    [0,0]       ,
+    [0,1,1,1]   ,
+    [1,0,1]     ,
+    [0,1,0,0]   ,
+    [1,1]       ,
+    [1,0]       ,
+    [1,1,1]     ,
+    [0,1,1,0]   ,
+    [1,1,0,1]   ,
+    [0,1,0]     ,
+    [0,0,0]     ,
+    [1]         ,
+    [0,0,1]     ,
+    [0,0,0,1]   ,
+    [0,1,1]     ,
+    [1,0,0,1]   ,
+    [1,0,1,1]   ,
+    [1,1,0,0]   ,
+    [0,1,1,1,1] ,
+    [0,0,1,1,1] ,
+    [0,0,0,1,1] ,
+    [0,0,0,0,1] ,
+    [0,0,0,0,0] ,
+    [1,0,0,0,0] ,
+    [1,1,0,0,0] ,
+    [1,1,1,0,0] ,
+    [1,1,1,1,0] ,
+    [1,1,1,1,1] ]
+
+VALUES =[
+    'A',
+    'B',
+    'C',
+    'D',
+    'E',
+    'F',
+    'G',
+    'H',
+    'I',
+    'J',
+    'K',
+    'L',
+    'M',
+    'N',
+    'O',
+    'P',
+    'Q',
+    'R',
+    'S',
+    'T',
+    'U',
+    'V',
+    'W',
+    'X',
+    'Y',
+    'Z',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '0']
+
+
 def plot_fft(N_, data): 
     # Number of samplepoints
     N = N_
@@ -36,7 +114,7 @@ channel_0 = data[:,0]
 channel_1 = data[:,1]
 
 
-FFT_SIZE = 1024
+FFT_SIZE = 1024*2
 itterations = 800
 map_color = cv2.COLORMAP_HOT
 display = True 
@@ -53,15 +131,55 @@ output = output / np.max(output)
 # clip 
 std = np.std(output)
 
-output[output<std*3] = 0
+output[output<std*10] = 0
 img = output # filered image for display
-output[output>=std*3] = 1
+#output[output>=std*6] = 1
 
-# make some filters for the longs and shorts
-longsKernels  = np.ones(shape=(1,13))           # len of longs, the threashold should be set to 9 or something
-shortsKernels = np.ones(shape=(1,11)) - 2       # 3 * len of shorts 
-shortsKernels[:,3:8] = shortsKernels[:,4:9] + 2
-# clip again
+#       # make some filters for the longs and shorts
+#       longsKernels  = np.ones(shape=(1,13))           # len of longs, the threashold should be set to 9 or something
+#       shortsKernels = np.ones(shape=(1,9)) - 2       # 3 * len of shorts 
+#       shortsKernels[:,2:7] = shortsKernels[:,2:7] + 2
+#       # clip again
+
+MAX_SPACES_BETWEEN_CHARECTERS = 7
+MAX_SPACES_BETWEEN_PULSES = 3
+MAX_POSITIVES_AS_SHORT = 3
+
+
+for x in range(FFT_SIZE//2):
+    current_signs = []
+    current_morse = [] 
+    positiveCount = 0
+    negativeCount = 0 
+    for y in range(itterations):
+        #wait untill we find a non-zero value
+        if output[y,x] > 0:
+            if negativeCount > MAX_SPACES_BETWEEN_PULSES:
+                if current_morse in CODES:
+                    current_signs.append(VALUES[CODES.index(current_morse)])
+                    print(current_morse)
+                current_morse = []
+            if negativeCount > MAX_SPACES_BETWEEN_CHARECTERS:
+                if len(current_signs) == 4:
+                    print(current_signs)
+                    current_signs = []
+                    current_morse = []
+
+            # handel tracked values
+            positiveCount += 1
+            negativeCount =  0 
+        else:
+            if positiveCount > MAX_POSITIVES_AS_SHORT: # it is a long
+                current_morse.append(1)
+            elif positiveCount > 0 and positiveCount <= MAX_POSITIVES_AS_SHORT:
+                current_morse.append(0)
+
+
+            # handel tracked values
+            negativeCount += 1
+            positiveCount =  0
+
+
 
 # generate Iamge
 if display:
