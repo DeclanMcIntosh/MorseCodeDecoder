@@ -37,21 +37,38 @@ channel_1 = data[:,1]
 
 
 FFT_SIZE = 1024
-itterations = 1024
+itterations = 800
 map_color = cv2.COLORMAP_HOT
+display = True 
 
+# get FFTs
 output = np.zeros((itterations,FFT_SIZE//2))
 for x in range(itterations):
     mags = fftMag(FFT_SIZE, channel_0[x*FFT_SIZE:(x+1)*FFT_SIZE])
     output[x] = mags
 
-    
-
+# normalize
 output = output / np.max(output)
-output = np.uint8(output * 255)
-img = cv2.applyColorMap(output,map_color)
 
-cv2.imshow('window', img)
-cv2.waitKey(-1)
+# clip 
+std = np.std(output)
+
+output[output<std*3] = 0
+img = output # filered image for display
+output[output>=std*3] = 1
+
+# make some filters for the longs and shorts
+longsKernels  = np.ones(shape=(1,13))           # len of longs, the threashold should be set to 9 or something
+shortsKernels = np.ones(shape=(1,11)) - 2       # 3 * len of shorts 
+shortsKernels[:,3:8] = shortsKernels[:,4:9] + 2
+# clip again
+
+# generate Iamge
+if display:
+    img = np.uint8(img * 255)
+    img = cv2.applyColorMap(img,map_color)
+
+    cv2.imshow('window', img)
+    cv2.waitKey(-1)
 
 print("")
