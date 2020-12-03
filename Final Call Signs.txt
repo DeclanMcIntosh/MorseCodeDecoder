@@ -1,0 +1,77 @@
+# MorseCodeDecoder
+
+This is my ECE 350 project, they provided a .wav file with multiple morse code call signals, the goal is to extract all the call signals, perferably with time-stamps
+
+
+I use the following public open source libraries:
+- scipy (signal processing and filters)
+- numpy (array and numeric progamming)
+- openCV (display)
+- matplotlib (display)
+- ittertools (addvanced itterations)
+- collections (advanced data types)
+
+
+Good final call signs these are syndicated from my multiple methods (SEE GITHUB)
+
+Some do not have time stamps they are from my Rev3 that did not find timestamps because I could not get wroking with time steps and down-sampling complexities.
+
+Time stamps are in seconds.
+
+See GITHUB with code and everything at https://github.com/DeclanMcIntosh/MorseCodeDecoder
+
+
+4  KZ7X
+5  NS0R
+6  AD5A
+11  KM0DX
+11  KU6CW
+31  NA8V
+33  KN7NV
+34  OK1PX
+35  NO6T
+35  WA5LXS
+44  K8AJS
+44  TI7W
+44  WK7S
+48  WY6K
+57  K5MXG
+60  AC5O
+67  VE3DZ
+68  W6KGP
+72  K5WA
+76  W3KB
+77  NE9U
+96  NE9H
+101  N2UU
+103  VA3FF
+105  N3BB
+111  WR1ST
+115  K5ZG
+124  W1DYJ
+133  NA3D
+135  NU5A
+138  ZF1A
+157  DL6KVA
+181  W3LL
+197  PC3T
+200  K5MV
+206  K0FX
+211  N3QE
+215  WR7Q
+218  N8AHH
+228  K3MD
+232  W5AK
+4  NR6O
+5  K5RX
+6  AD5A
+10  NX6T
+14  KT5J
+15  K0ZR
+22  NN5Z
+26  KW1K
+26  N6MA
+90  WQ5L
+118  WD5K
+137  N6MR
+226  NN5J
